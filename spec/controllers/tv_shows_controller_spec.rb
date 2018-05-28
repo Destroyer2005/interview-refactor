@@ -16,7 +16,7 @@ RSpec.describe TvShowsController, :type => :controller do
     end
 
     it "loads all of the tv_shows into @tv_shows" do
-      tv_show1, tv_show2 = TvShow.create!, TvShow.create!
+      tv_show1, tv_show2 = TvShow.create!(title: 'test1'), TvShow.create!(title: 'test2')
       get :index, :format => :json
 
       expect(assigns(:tv_shows)).to match_array([tv_show1, tv_show2])
@@ -24,7 +24,7 @@ RSpec.describe TvShowsController, :type => :controller do
   end
 
   describe "GET #show" do
-    let(:tv_show) { TvShow.create! }
+    let(:tv_show) { TvShow.create!(title: 'test1') }
 
     it "responds successfully with an HTTP 200 status code" do
       get :show, id: tv_show.id, :format => :json
@@ -37,6 +37,12 @@ RSpec.describe TvShowsController, :type => :controller do
       get :show, id: tv_show.id, :format => :json
 
       expect(assigns(:tv_show)).to match(tv_show)
+    end
+
+    it "returns error if id not found" do
+      get :show, id: 'not-found', :format => :json
+
+      expect(assigns(:error)).to match(:error => "TvShow not found")
     end
 
     it 'incude episodes data in response' do
@@ -52,6 +58,7 @@ RSpec.describe TvShowsController, :type => :controller do
 
   describe "POST #create" do
     let(:params) { { title: 'House' } }
+    let(:wrong_params) { { title: '' } }
 
     it "responds successfully with an HTTP 200 status code" do
       request.accept = "application/json"
@@ -67,11 +74,19 @@ RSpec.describe TvShowsController, :type => :controller do
 
       expect(response.body).to include('House')
     end
+
+    it "return error if create validation error" do
+      request.accept = "application/json"
+      post :create, tv_show: wrong_params
+
+      expect(assigns(:error)).to match(:error => "TvShow cannot be created")
+    end
   end
 
   describe "PUT #update" do
     let(:tv_show) { TvShow.create!(title: 'Foo') }
     let(:params) { { title: 'House' } }
+    let(:wrong_params) { {title: ''} }
 
     it "responds successfully with an HTTP 200 status code" do
       request.accept = "application/json"
@@ -86,6 +101,13 @@ RSpec.describe TvShowsController, :type => :controller do
       put :update, id: tv_show.id, tv_show: params
 
       expect(response.body).to include('House')
+    end
+
+    it "return error if create validation error" do
+      request.accept = "application/json"
+      post :update, id: tv_show.id, tv_show: wrong_params
+
+      expect(assigns(:error)).to match(:error => "TvShow cannot be updated")
     end
   end
 
