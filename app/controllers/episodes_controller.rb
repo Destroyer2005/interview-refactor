@@ -1,20 +1,16 @@
 class EpisodesController < ApplicationController
-  before_action :authenticate_user!
+  before_action :authenticate_user!, :tv_show_exists?
 
   def index
     @tv_show = TvShow.find(params[:tv_show_id])
     @episodes = Episode.where(tv_show_id: @tv_show.id)
-    respond_to do |format|
-      format.json { render :json => @episodes }
-    end
+    render json: @episodes
   end
 
   def show
     @tv_show = TvShow.find(params[:tv_show_id])
     @episode = Episode.where(id: params[:id], tv_show_id: @tv_show.id).first
-    respond_to do |format|
-      format.json { render :json => @episode }
-    end
+    render json: @episode
   end
 
   def create
@@ -22,19 +18,19 @@ class EpisodesController < ApplicationController
     @episode = Episode.new(episode_params)
     @episode.tv_show_id = @tv_show.id
     if @episode.save
-      respond_to do |format|
-        format.json { render :json => @episode }
-      end
+      render json: @episode
+    else
+      render json: @episode.errors.full_messages
     end
   end
 
   def update
     @tv_show = TvShow.find(params[:tv_show_id])
     @episode = Episode.where(id: params[:id], tv_show_id: @tv_show.id).first
-    if @episode.update_attributes(episode_params)
-      respond_to do |format|
-        format.json { render :json => @episode }
-      end
+    if @episode.update(episode_params)
+      render json: @episode
+    else
+      render json: @episode.errors.full_messages
     end
   end
 
@@ -42,13 +38,18 @@ class EpisodesController < ApplicationController
     @tv_show = TvShow.find(params[:tv_show_id])
     @episode = Episode.where(id: params[:id], tv_show_id: @tv_show.id).first
     @episode.delete
-    respond_to do |format|
-      format.json { render :json => @episode }
-    end
+    render json: @episode
   end
 
   private
-  def episode_params
-    params.require('episode').permit('title', 'watched')
-  end
+    def episode_params
+      params.require(:episode).permit(:title, :watched, :episode)
+    end
+
+    def tv_show_exists?
+      unless TvShow.where(id: params[:tv_show_id]).any?
+        @error = {:error => "TvShow not found"}
+        render json: @error
+      end
+    end
 end

@@ -1,5 +1,6 @@
 class TvShowsController < ApplicationController
   before_action :authenticate_user!
+  before_action :tv_show_exists?, only: [:show, :update, :destroy]
 
   def index
     @tv_shows = TvShow.all
@@ -46,5 +47,12 @@ class TvShowsController < ApplicationController
   private
     def tv_show_params
       params.require(:tv_show).permit(:title, :description)
+    end
+
+    def tv_show_exists?
+      unless TvShow.where(id: params[:id]).any?
+        @error = {:error => "TvShow not found"}
+        render json: @error
+      end
     end
 end

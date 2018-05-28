@@ -4,7 +4,7 @@ RSpec.describe TvShowsController, :type => :controller do
 
   before do
     user = User.create!(email: 'foo@example.com', password: '12345678')
-    sign_in :user, user
+    sign_in user, scope: :user
   end
 
   describe "GET #index" do
