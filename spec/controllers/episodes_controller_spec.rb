@@ -12,19 +12,18 @@ RSpec.describe EpisodesController, :type => :controller do
     it "responds successfully with an HTTP 200 status code" do
       get :index, tv_show_id: tv_show.id, :format => :json
 
-      expect(response).to be_success
       expect(response).to have_http_status(200)
     end
 
     it "loads all of the episodes into @episodes" do
-      episode1, episode2 = Episode.create!(tv_show_id: tv_show.id), Episode.create!(tv_show_id: tv_show.id, episode: 2)
+      episode1, episode2 = Episode.create!(tv_show_id: tv_show.id, episode: 1), Episode.create!(tv_show_id: tv_show.id, episode: 2)
       get :index, tv_show_id: tv_show.id, :format => :json
 
       expect(assigns(:episodes)).to match_array([episode1, episode2])
     end
 
     it "loads all of the episodes into @episodes" do
-      episode1, episode2 = Episode.create!(tv_show_id: tv_show.id), Episode.create!(tv_show_id: tv_show.id, episode: 2)
+      episode1, episode2 = Episode.create!(tv_show_id: tv_show.id, episode: 1), Episode.create!(tv_show_id: tv_show.id, episode: 2)
       get :index, tv_show_id: tv_show.id, :format => :json
 
       expect(assigns(:episodes)).to match_array([episode1, episode2])
@@ -43,7 +42,6 @@ RSpec.describe EpisodesController, :type => :controller do
     it "responds successfully with an HTTP 200 status code" do
       get :show, id: episode.id, tv_show_id: tv_show.id, :format => :json
 
-      expect(response).to be_success
       expect(response).to have_http_status(200)
     end
 
@@ -67,7 +65,6 @@ RSpec.describe EpisodesController, :type => :controller do
       request.accept = "application/json"
       post :create, tv_show_id: tv_show.id, episode: params
 
-      expect(response).to be_success
       expect(response).to have_http_status(200)
     end
 
@@ -103,7 +100,6 @@ RSpec.describe EpisodesController, :type => :controller do
       request.accept = "application/json"
       put :update, id: episode.id, tv_show_id: tv_show.id, episode: {episode: 1}
 
-      expect(response).to be_success
       expect(response).to have_http_status(200)
     end
 
@@ -138,7 +134,6 @@ RSpec.describe EpisodesController, :type => :controller do
       request.accept = "application/json"
       delete :destroy, id: episode.id, tv_show_id: tv_show.id
 
-      expect(response).to be_success
       expect(response).to have_http_status(200)
     end
 

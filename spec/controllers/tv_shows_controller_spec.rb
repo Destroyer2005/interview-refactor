@@ -11,7 +11,6 @@ RSpec.describe TvShowsController, :type => :controller do
     it "responds successfully with an HTTP 200 status code" do
       get :index, :format => :json
 
-      expect(response).to be_success
       expect(response).to have_http_status(200)
     end
 
@@ -29,7 +28,6 @@ RSpec.describe TvShowsController, :type => :controller do
     it "responds successfully with an HTTP 200 status code" do
       get :show, id: tv_show.id, :format => :json
 
-      expect(response).to be_success
       expect(response).to have_http_status(200)
     end
 
@@ -64,7 +62,6 @@ RSpec.describe TvShowsController, :type => :controller do
       request.accept = "application/json"
       post :create, tv_show: params
 
-      expect(response).to be_success
       expect(response).to have_http_status(200)
     end
 
@@ -92,7 +89,6 @@ RSpec.describe TvShowsController, :type => :controller do
       request.accept = "application/json"
       put :update, id: tv_show.id, tv_show: params
 
-      expect(response).to be_success
       expect(response).to have_http_status(200)
     end
 
@@ -118,7 +114,6 @@ RSpec.describe TvShowsController, :type => :controller do
       request.accept = "application/json"
       delete :destroy, id: tv_show.id
 
-      expect(response).to be_success
       expect(response).to have_http_status(200)
     end
 
