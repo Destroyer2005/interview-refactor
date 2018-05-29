@@ -4,16 +4,7 @@ class TvShow < ActiveRecord::Base
 
   validates :title, presence: true
 
-  def to_json(_)
-    ep = []
-    episodes.each do |e|
-      ep << {id: e.id, title: e.title}
-    end
-
-    JSON.generate({
-      id: id,
-      title: title,
-      episodes: ep
-    })
+  def as_json(options={})
+    { :id => self.id, title: title, episodes: episodes.as_json(only: [:id, :title])}
   end
 end
