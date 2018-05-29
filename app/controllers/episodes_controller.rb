@@ -1,5 +1,5 @@
 class EpisodesController < ApplicationController
-  before_action :authenticate_user!, :tv_show_exists?
+  before_action :authenticate!, :tv_show_exists?
 
   def index
     @tv_show = TvShow.find(params[:tv_show_id])

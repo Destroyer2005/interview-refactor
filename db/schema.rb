@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150210105030) do
+ActiveRecord::Schema.define(version: 20180528220144) do
 
   create_table "episodes", force: :cascade do |t|
     t.integer  "tv_show_id", null: false
@@ -44,6 +44,7 @@ ActiveRecord::Schema.define(version: 20150210105030) do
     t.string   "last_sign_in_ip"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "api_key"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true
