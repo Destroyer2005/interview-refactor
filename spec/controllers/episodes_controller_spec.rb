@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe EpisodesController, :type => :controller do
-  let!(:tv_show) { TvShow.create!(title: 'test') }
 
   before do
     user = User.create!(email: 'foo@example.com', password: '12345678')
@@ -9,6 +8,7 @@ RSpec.describe EpisodesController, :type => :controller do
   end
 
   describe "GET #index" do
+    let(:tv_show) { TvShow.create!(title: 'test', user: User.first) }
     it "responds successfully with an HTTP 200 status code" do
       get :index, tv_show_id: tv_show.id, :format => :json
 
@@ -37,6 +37,7 @@ RSpec.describe EpisodesController, :type => :controller do
   end
 
   describe "GET #show" do
+    let(:tv_show) { TvShow.create!(title: 'test', user: User.first) }
     let(:episode) { Episode.create!(tv_show_id: tv_show.id) }
 
     it "responds successfully with an HTTP 200 status code" do
@@ -59,6 +60,7 @@ RSpec.describe EpisodesController, :type => :controller do
   end
 
   describe "POST #create" do
+    let(:tv_show) { TvShow.create!(title: 'test', user: User.first) }
     let(:params) { { title: 'House', episode: 1 } }
 
     it "responds successfully with an HTTP 200 status code" do
@@ -92,6 +94,7 @@ RSpec.describe EpisodesController, :type => :controller do
   end
 
   describe "PUT #update" do
+    let(:tv_show) { TvShow.create!(title: 'test', user: User.first) }
     let(:episode) { Episode.create!(title: 'Foo', tv_show_id: tv_show.id) }
     let(:params) { { title: 'House' } }
     let(:wrong_params) { { episode: 1 } }
@@ -128,6 +131,7 @@ RSpec.describe EpisodesController, :type => :controller do
   end
 
   describe 'DELETE #destroy' do
+    let(:tv_show) { TvShow.create!(title: 'test', user: User.first) }
     let(:episode) { Episode.create!(title: 'House', tv_show_id: tv_show.id) }
 
     it "responds successfully with an HTTP 200 status code" do

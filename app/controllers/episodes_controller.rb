@@ -1,5 +1,7 @@
 class EpisodesController < ApplicationController
-  before_action :authenticate!, :tv_show_exists?
+  before_action :authenticate!
+  before_action :tv_show_exists?, only: [:index, :show, :create]
+  before_action :current_user_owner?, only: [:update, :destroy]
 
   def index
     @tv_show = TvShow.find(params[:tv_show_id])
@@ -50,6 +52,17 @@ class EpisodesController < ApplicationController
       unless TvShow.where(id: params[:tv_show_id]).any?
         @error = {:error => "TvShow not found"}
         render json: @error
+      else
+        false
+      end
+    end
+
+    def current_user_owner?
+      unless tv_show_exists?
+        if current_user != TvShow.find(params[:tv_show_id]).user
+          @error = {:error => "You don't have permission to edit this Episode"}
+          render json: @error
+        end
       end
     end
 end

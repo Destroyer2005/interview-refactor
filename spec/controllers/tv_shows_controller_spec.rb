@@ -76,12 +76,12 @@ RSpec.describe TvShowsController, :type => :controller do
       request.accept = "application/json"
       post :create, tv_show: wrong_params
 
-      expect(assigns(:error)).to match(:error => "TvShow cannot be created")
+      expect(assigns(:tv_show).errors.full_messages).to match_array(["Title can't be blank"])
     end
   end
 
   describe "PUT #update" do
-    let(:tv_show) { TvShow.create!(title: 'Foo') }
+    let(:tv_show) { TvShow.create!(title: 'Foo', user: User.first) }
     let(:params) { { title: 'House' } }
     let(:wrong_params) { {title: ''} }
 
@@ -103,12 +103,12 @@ RSpec.describe TvShowsController, :type => :controller do
       request.accept = "application/json"
       post :update, id: tv_show.id, tv_show: wrong_params
 
-      expect(assigns(:error)).to match(:error => "TvShow cannot be updated")
+      expect(assigns(:tv_show).errors.full_messages).to match_array(["Title can't be blank"])
     end
   end
 
   describe 'DELETE #destroy' do
-    let(:tv_show) { TvShow.create!(title: 'House') }
+    let(:tv_show) { TvShow.create!(title: 'House', user: User.first) }
 
     it "responds successfully with an HTTP 200 status code" do
       request.accept = "application/json"
