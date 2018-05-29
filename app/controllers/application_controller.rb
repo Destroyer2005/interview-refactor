@@ -3,15 +3,14 @@ class ApplicationController < ActionController::Base
   helper_method :authenticate!
 
   def authenticate!
-    unless current_user
-      if params[:api_key]
-        if User.where(api_key: params[:api_key]).any?
-          sign_in(User.find_by(api_key: params[:api_key]), scope: :user)
-        else
-          render json: {:error => "Wrong API key"}
-        end
+    if params[:api_key]
+      if User.where(api_key: params[:api_key]).any?
+        sign_in(User.find_by(api_key: params[:api_key]), scope: :user)
+      else
+        render json: {:error => "Wrong API key"}
       end
-    authenticate_user!
+    else
+      authenticate_user!
     end
   end
 end
